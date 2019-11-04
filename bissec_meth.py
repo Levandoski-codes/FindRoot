@@ -11,9 +11,10 @@ def zero(a, b, err=0.01, max_inter=100):
         return None
 
     while n < max_inter:
+        med_ant = med
         med = (a+b)/2
 
-        if function(med) == 0 or abs((a-b)/2) < err:
+        if function(med) == 0 or abs((med - med_ant)/med) < err:
             return med
         elif function(a) * function(med) < 0:
             b = med
