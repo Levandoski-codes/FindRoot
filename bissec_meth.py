@@ -1,25 +1,24 @@
 
-def function(x):
-    f = float(x**3 - x - 2)
-    return f
+from function import func
 
 def zero(a, b, err=0.01, max_inter=100):
     n = 0
     
-    if function(a) * function(b) > 0:
-        print('Intervalo errado')
+    if func(a) * func(b) > 0:
+        print('Intervalo inválido')
         return None
 
     while n < max_inter:
-        med_ant = med
-        med = (a+b)/2
+        if n == 0:
+            new_ant = b
+        new = (a+b)/2
 
-        if function(med) == 0 or abs((med - med_ant)/med) < err:
-            return med
-        elif function(a) * function(med) < 0:
-            b = med
+        if func(new) == 0 or abs((new - new_ant)/new) < err:
+            return new
+        elif func(a) * func(new) < 0:
+            b = new
         else:
-            a = med
+            a = new
 
         n += 1
 
