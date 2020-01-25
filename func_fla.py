@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from time import sleep
 # from fals_meth import zero
 
 
@@ -50,44 +51,59 @@ kauz = lambda q, w: (epsAu(w)*w**2 - (q*10**5)**2)**0.5
 f4 = lambda q, w: -kauz(q,w)*D - np.arctan(1j*kauz(q,w)/epsAu(w)*kaz(q,w)) - np.arctan(1j*epsAu(w)*kaz(q,w)/1*kauz(q,w))
 
 
-def zero(func, a, b, w=1000, err=0.01, max_inter=100):
-
-    n=0    
-    if func(a, w) * func(b, w) > 0:
+def zero(func, a, b, w=0, err=0.01, max_inter=100):
+	# Recebe uma funcão como paramentro e os pontos a e b iniciais
+    print(func(a, w).real, func(b, w).real)
+    if func(a, w).real * func(b, w).real > 0:
         print('Intervalo inválido')
         return None
-
+    n=0
     while n < max_inter:
         
-        if func(a, w) == 0:
+        if func(a, w).real == 0:
             return a
 
-        elif func(b, w) == 0:
+        elif func(b, w).real == 0:
             return b
 
         if n == 0:
             new_ant = b
-        new = (((func(a, w) * (a - b)) / (func(b, w) - func(a, w))) + a)
+        else:
+            new_ant = new
+        new = (((func(a, w) * (a - b)) / 
+            (func(b, w) - func(a, w))) + a)
+       
         
-        if func(new, w) == 0 or abs((new - new_ant)/new) < err:
+        if func(new, w).real == 0 or func(new, w).real < err:
+            print(new, w)
+            print('Zeroooooo ->',func(new, w).real)
             return new
-        elif func(a, w) * func(new, w) < 0:
+        elif func(a, w).real * func(new, w).real < 0:
             b = new
         else:
             a = new
+        print(func(a, w).real)
+        print(func(b, w).real)
+        print(func(new, w).real)
 
         n += 1
+    print(f'N: {n}')
     return None
 
+W_domain = np.linspace(-1000, 1700, 100)
 
-W_domain = np.linspace(0, 4, 1000)
-
-fx = lambda q, w: q*w + 2*w**2 - q*3
+fx = lambda q, w: q*w + 2*w**2 - q**3
 
 zeros = []
-for x in W_domain:
-    zeros.append(zero(fx, -500, 500, w=x, err=0.01))
+
+for w in W_domain:
+# Calcula os zeros e joga na lista
+	# print(f4(0, w).real)
+    result = zero(f4, 700, 1000, w=float(w), err=0.1)
+    zeros.append(result)
 
 plt.scatter(W_domain, zeros)
-plt.show()
+plt.xlabel('x')
+plt.ylabel('y')
+# plt.show()
 # print(zeros)
